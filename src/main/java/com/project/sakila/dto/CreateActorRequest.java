@@ -1,7 +1,6 @@
 package com.project.sakila.dto;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

@@ -1,10 +1,10 @@
 package com.project.sakila.controllers;
 
 import com.project.sakila.dto.ActorResponse;
-import com.project.sakila.dto.UpdateActorRequest;
-import com.project.sakila.repositories.ActorRepository;
 import com.project.sakila.dto.CreateActorRequest;
+import com.project.sakila.dto.UpdateActorRequest;
 import com.project.sakila.entities.Actor;
+import com.project.sakila.repositories.ActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/actors")
 public class ActorController {
 
-    @Autowired
+
     private final ActorRepository actorRepository;
 
     @Autowired

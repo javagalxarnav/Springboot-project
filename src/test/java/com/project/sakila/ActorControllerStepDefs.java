@@ -3,6 +3,7 @@ package com.project.sakila;
 import com.project.sakila.controllers.ActorController;
 import com.project.sakila.dto.ActorResponse;
 import com.project.sakila.dto.CreateActorRequest;
+import com.project.sakila.dto.UpdateActorRequest;
 import com.project.sakila.entities.Actor;
 import com.project.sakila.repositories.ActorRepository;
 import io.cucumber.java.Before;
@@ -11,8 +12,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
-import com.project.sakila.dto.UpdateActorRequest;
 
 import java.util.Optional;
 

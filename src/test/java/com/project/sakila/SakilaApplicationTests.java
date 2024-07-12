@@ -2,23 +2,19 @@ package com.project.sakila;
 
 import com.project.sakila.controllers.ActorController;
 import com.project.sakila.controllers.FilmController;
-import com.project.sakila.dto.ActorResponse;
-import com.project.sakila.dto.CreateActorRequest;
-import com.project.sakila.dto.CreateFilmRequest;
-import com.project.sakila.dto.FilmResponse;
-import com.project.sakila.dto.UpdateActorRequest;
-import com.project.sakila.dto.UpdateFilmRequest;
+import com.project.sakila.dto.*;
 import com.project.sakila.entities.Actor;
 import com.project.sakila.entities.Film;
 import com.project.sakila.entities.Language;
 import com.project.sakila.repositories.ActorRepository;
 import com.project.sakila.repositories.FilmRepository;
+import com.project.sakila.repositories.LanguageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
-import com.project.sakila.repositories.LanguageRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -82,9 +78,8 @@ class SakilaApplicationTests {
 
 		filmRepository = mock(FilmRepository.class);
 		languageRepository = mock(LanguageRepository.class);
-		filmController = new FilmController();
-		filmController.filmRepository = filmRepository;
-		filmController.languageRepository = languageRepository;
+		filmController = new FilmController(filmRepository, languageRepository);
+
 
 
 
@@ -102,7 +97,7 @@ class SakilaApplicationTests {
 
 }
 	@Test
-	public void actorControllerReturnsActorResponse() {
+	void actorControllerReturnsActorResponse() {
 		final var actual = actorController.readAllActors();
 		Assertions.assertEquals(2, actual.size());
 		Assertions.assertEquals(actor1.getFirstName(), actual.getFirst().getFirstName());
@@ -110,7 +105,7 @@ class SakilaApplicationTests {
 	}
 
 	@Test
-	public void actorControllerReturnsActorById() {
+	void actorControllerReturnsActorById() {
 		final var actual = actorController.readActorById((short)1);
 		Assertions.assertEquals(actor1.getId(), actual.getId());
 		Assertions.assertEquals(actor1.getFirstName(), actual.getFirstName());
@@ -118,14 +113,14 @@ class SakilaApplicationTests {
 	}
 
 	@Test
-	public void actorControllerThrows404ForInvalidActorId(){
+	void actorControllerThrows404ForInvalidActorId(){
 		Assertions.assertThrows(ResponseStatusException.class, () -> {
 			actorController.readActorById((short)3);
 		});
 	}
 
 	@Test
-	public void actorControllerCreatesActor(){
+	void actorControllerCreatesActor(){
 		CreateActorRequest request = new CreateActorRequest("Max", "Tom");
 
 		Actor actor = new Actor();
@@ -143,7 +138,7 @@ class SakilaApplicationTests {
 	}
 
 	@Test
-	public void actorControllerUpdatesActor() {
+	void actorControllerUpdatesActor() {
 		UpdateActorRequest request = new UpdateActorRequest("UpdateFirstName", "UpdatedLastName");
 
 
@@ -158,13 +153,13 @@ class SakilaApplicationTests {
 
 
 	@Test
-	public void actorControllerThrows404WhenDeletingNonExistentActor() {
+	void actorControllerThrows404WhenDeletingNonExistentActor() {
 		Assertions.assertThrows(ResponseStatusException.class, () -> {
 			actorController.deleteActor((short) 3);
 		});
 	}
 	@Test
-	public void actorControllerDeletesActor() {
+	void actorControllerDeletesActor() {
 		doNothing().when(actorRepository).delete(any(Actor.class));
 
 		actorController.deleteActor((short) 1);
@@ -176,7 +171,7 @@ class SakilaApplicationTests {
 	}
 
 	@Test
-	public void filmControllerReturnsFilmResponse() {
+	void filmControllerReturnsFilmResponse() {
 		final var actual = filmController.realAllFilms();
 		Assertions.assertEquals(2, actual.size());
 		Assertions.assertEquals(film1.getTitle(), actual.get(0).getTitle());
@@ -185,30 +180,30 @@ class SakilaApplicationTests {
 
 
 	@Test
-	public void filmControllerReturnsFilmById() {
+	void filmControllerReturnsFilmById() {
 		final var actual = filmController.readFilmById((short)1);
 		Assertions.assertEquals(film1.getId(), actual.getId());
 		Assertions.assertEquals(film1.getTitle(), actual.getTitle());
-		//Assertions.assertEquals(film1.getDescription(), actual.getDescription());
+
 	}
 
 
 	@Test
-	public void filmControllerThrows404ForInvalidFilmId() {
+	void filmControllerThrows404ForInvalidFilmId() {
 		Assertions.assertThrows(ResponseStatusException.class, () -> {
 			filmController.readFilmById((short)3);
 		});
 	}
 
 	@Test
-	public void filmControllerThrows404WhenDeletingNonExistentFilm() {
+	void filmControllerThrows404WhenDeletingNonExistentFilm() {
 		Assertions.assertThrows(ResponseStatusException.class, () -> {
 			filmController.deleteFilm((short)3);
 		});
 	}
 
 	@Test
-	public void filmControllerDeletesFilm() {
+	void filmControllerDeletesFilm() {
 		doNothing().when(filmRepository).delete(any(Film.class));
 
 		filmController.deleteFilm((short)1);
@@ -219,7 +214,7 @@ class SakilaApplicationTests {
 
 
 	@Test
-	public void filmControllerCreatesFilm() {
+	void filmControllerCreatesFilm() {
 
 		CreateFilmRequest request = new CreateFilmRequest(
 				"Interstellar",
@@ -254,13 +249,13 @@ class SakilaApplicationTests {
 		Assertions.assertEquals(2014, response.getReleaseYear());
 		Assertions.assertEquals(language1, response.getLanguage());
 		Assertions.assertEquals(5.99f, response.getRentalRate());
-		//Assertions.assertEquals(169, response.getLength());
+
 		Assertions.assertEquals(24.99f, response.getReplacementCost());
 		Assertions.assertEquals("PG-13", response.getRating());
 	}
 
 	@Test
-	public void filmControllerUpdatesFilm() {
+	void filmControllerUpdatesFilm() {
 		UpdateFilmRequest request = new UpdateFilmRequest(
 				"Inception Updated",
 				"A thriller",

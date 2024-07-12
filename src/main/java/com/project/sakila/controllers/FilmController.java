@@ -1,36 +1,45 @@
 package com.project.sakila.controllers;
 
 
-import com.project.sakila.entities.Film;
-import com.project.sakila.entities.Language;
-import com.project.sakila.repositories.FilmRepository;
 import com.project.sakila.dto.CreateFilmRequest;
 import com.project.sakila.dto.FilmResponse;
 import com.project.sakila.dto.UpdateFilmRequest;
+import com.project.sakila.entities.Film;
+import com.project.sakila.entities.Language;
+import com.project.sakila.repositories.FilmRepository;
+import com.project.sakila.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import com.project.sakila.repositories.LanguageRepository;
-
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/films")
 public class FilmController {
 
+
+    private final FilmRepository filmRepository;
+    private final LanguageRepository languageRepository;
+
     @Autowired
-    public FilmRepository filmRepository;
-    public LanguageRepository languageRepository;
+    public FilmController(FilmRepository filmRepository ,LanguageRepository languageRepository ) {
+        this.filmRepository = filmRepository;
+        this.languageRepository = languageRepository;
+    }
+
+
+
+
+
 
     @GetMapping()
     public List<FilmResponse> realAllFilms(){
         return filmRepository.findAll()
                 .stream()
                 .map(FilmResponse::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
